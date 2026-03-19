@@ -26,17 +26,22 @@ REQUEST_TIMEOUT = 12
 
 
 def _default_api_url() -> str:
-    """Pick API URL from Streamlit secrets, env var, then local fallback."""
+    """Pick API URL from Streamlit secrets/env; empty means local fallback mode."""
     try:
-        if "API_URL" in st.secrets:
-            return str(st.secrets["API_URL"])
+        if "API_URL" in st.secrets and str(st.secrets["API_URL"]).strip():
+            return str(st.secrets["API_URL"]).strip()
     except Exception:
         pass
-    return os.getenv("API_URL", "http://127.0.0.1:8000")
+    return os.getenv("API_URL", "").strip()
 
 
 def _normalize_base_url(url: str) -> str:
-    return str(url).strip().rstrip("/")
+    cleaned = str(url).strip().rstrip("/")
+    if not cleaned:
+        return ""
+    if not cleaned.startswith(("http://", "https://")):
+        cleaned = f"http://{cleaned}"
+    return cleaned
 
 
 def _parse_json_response(resp: requests.Response) -> Tuple[Optional[Any], str]:
@@ -49,6 +54,9 @@ def _parse_json_response(resp: requests.Response) -> Tuple[Optional[Any], str]:
 
 def _check_api(api_base_url: str) -> Tuple[bool, Dict[str, Any], str]:
     """Validate that api_base_url is a compatible FastAPI backend."""
+    if not api_base_url:
+        return False, {}, "No FastAPI URL configured. Running in local fallback mode."
+
     try:
         health_resp = requests.get(f"{api_base_url}/health", timeout=REQUEST_TIMEOUT)
         health_json, raw = _parse_json_response(health_resp)
@@ -185,7 +193,9 @@ st.caption("Powered by RandomForest | Tumushiime Final Exam Model")
 # ── Sidebar ────────────────────────────────────────────────────────────────
 with st.sidebar:
     st.header("API Settings")
-    api_url = _normalize_base_url(st.text_input("FastAPI URL", value=_default_api_url()))
+    api_url = _normalize_base_url(
+        st.text_input("FastAPI URL (optional)", value=_default_api_url(), placeholder="https://your-fastapi-service.onrender.com")
+    )
     api_ok, api_info, api_error = _check_api(api_url)
     local_resources, local_error = _load_local_resources()
     use_local_fallback = (not api_ok) and (local_resources is not None)
@@ -200,11 +210,11 @@ with st.sidebar:
             st.warning("This URL looks like a Streamlit frontend, not a FastAPI backend.")
 
         if use_local_fallback:
-            st.warning("API unavailable. Using local in-app model fallback.")
+            st.info("Using local in-app model fallback ✅")
         else:
             st.error("Cannot reach a valid FastAPI backend.")
 
-        if api_error:
+        if api_error and api_url:
             st.caption(api_error)
         if local_error:
             st.caption(local_error)
