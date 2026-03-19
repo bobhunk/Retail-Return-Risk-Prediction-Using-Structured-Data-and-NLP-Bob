@@ -3,7 +3,7 @@ Streamlit UI for Retail Return Prediction
 Calls FastAPI backend at http://127.0.0.1:8000
 """
 
-import streamlit_app as st
+import streamlit as st
 import requests
 import pandas as pd
 import json
