@@ -1,0 +1,5 @@
+DescriptionClean,UnitPrice,AbsQuantity,LineValueAbs,InvoiceMonth,InvoiceWeekday,InvoiceHour,CustomerIDMissing,DescriptionLength,Country,CountryEncoded,ReturnProbability,PredictedFlag,InferenceLabel
+white hanging heart glass decoration,2.55,6,15.3,11,3,14,0,36,United Kingdom,36,0.4061,0,Low Return Risk
+manual postage bank charges adjustment,1.2,18,21.6,12,1,9,1,38,United Kingdom,36,0.1488,0,Low Return Risk
+red retrospot lunch bag medium,1.65,24,39.6,3,0,10,0,30,Germany,14,0.3317,0,Low Return Risk
+dotcom sales discount sample voucher,0.85,50,42.5,8,4,16,1,35,France,13,0.2135,0,Low Return Risk

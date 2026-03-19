@@ -1,0 +1,40 @@
+{
+  "requests": [
+    {
+      "DescriptionClean": "white hanging heart glass decoration",
+      "UnitPrice": 2.55,
+      "AbsQuantity": 6,
+      "InvoiceMonth": 11,
+      "InvoiceWeekday": 3,
+      "InvoiceHour": 14,
+      "CustomerIDMissing": 0,
+      "Country": "United Kingdom"
+    },
+    {
+      "DescriptionClean": "manual postage bank charges dotcom adjustment",
+      "UnitPrice": 1.2,
+      "AbsQuantity": 18,
+      "InvoiceMonth": 12,
+      "InvoiceWeekday": 1,
+      "InvoiceHour": 9,
+      "CustomerIDMissing": 1,
+      "Country": "United Kingdom"
+    }
+  ],
+  "responses": [
+    {
+      "PredictedReturnFlag": 0,
+      "ReturnProbability": 0.4061,
+      "InferenceLabel": "Low Return Risk",
+      "ModelName": "Gradient Boosting",
+      "ThresholdUsed": 0.825
+    },
+    {
+      "PredictedReturnFlag": 0,
+      "ReturnProbability": 0.1488,
+      "InferenceLabel": "Low Return Risk",
+      "ModelName": "Gradient Boosting",
+      "ThresholdUsed": 0.825
+    }
+  ]
+}
