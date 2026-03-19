@@ -1,7 +1,4 @@
 streamlit
-fastapi
-uvicorn
-requests
 pandas
 numpy
 scipy

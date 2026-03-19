@@ -28,7 +28,7 @@
 
 % ---------- Edit these metadata fields if needed ----------
 \newcommand{\studentname}{Robert Tumushiime}
-\newcommand{\accessno}{ACCESS-NO}
+\newcommand{\accessno}{B31332}
 \newcommand{\programme}{MSc Data Science}
 \newcommand{\courseyear}{Year 2, Semester 1}
 \newcommand{\courseunit}{Data Mining, Modelling and Analytics}
@@ -36,7 +36,6 @@
 
 % Application links
 \newcommand{\streamliturl}{https://retail-return-risk-prediction-bob.streamlit.app/}
-\newcommand{\apiurl}{http://127.0.0.1:8000}
 \newcommand{\publicappurl}{https://retail-return-risk-prediction-bob.streamlit.app/}
 
 \begin{document}
@@ -67,7 +66,9 @@
 \section{Executive Summary}
 This project addresses a practical retail analytics problem: predicting whether a transaction line is likely to be returned or cancelled before dispatch. The solution combines structured transaction attributes (for example quantity, unit price, temporal fields, and country) with text mining over product descriptions. A complete pipeline was built covering data acquisition, cleaning, feature engineering, model comparison, threshold optimization, NLP analysis, and deployment design.
 
-The final deployed inference stack uses a FastAPI backend and a Streamlit frontend. The selected production model is a HistGradientBoosting classifier saved in a joblib artefact together with an optimized decision threshold and feature metadata. Because the return class is highly imbalanced, model quality was evaluated with ROC-AUC and PR-AUC, with operational emphasis on return-class recall and F1 at the optimized threshold.
+The deployed Streamlit Cloud application uses in-app model inference as its backend, so no external API service is required for prediction. The selected production model is a HistGradientBoosting classifier saved in a joblib artefact together with an optimized decision threshold and feature metadata. Because the return class is highly imbalanced, model quality was evaluated with ROC-AUC and PR-AUC, with operational emphasis on return-class recall and F1 at the optimized threshold.
+
+The published deployment is therefore a single-tier architecture: users interact with the Streamlit interface, and the same app process performs preprocessing and model inference.
 
 \section{Problem Definition and Business Objective}
 Online retail operations frequently lose margin through returns, cancellations, reverse logistics, and handling costs. The analytical objective is to estimate return risk at transaction level using historical sales records and product-description text.
@@ -85,7 +86,7 @@ Online retail operations frequently lose margin through returns, cancellations, 
 \end{itemize}
 
 \section{Dataset and Preparation}
-The analysis used the UCI Online Retail dataset, containing over half a million transaction lines from an e-commerce business. The data contains both structured and unstructured signals:
+The analysis used the \href{https://archive.ics.uci.edu/dataset/352/online+retail}{UCI Online Retail dataset}, containing over half a million transaction lines from an e-commerce business. The data contains both structured and unstructured signals:
 
 \begin{itemize}[leftmargin=1.5em]
     \item Structured: Quantity, UnitPrice, InvoiceDate, CustomerID, Country, StockCode.
@@ -202,17 +203,18 @@ NLP output files include keyword coefficients and visualizations, such as \textt
 
 \section{Deployment Architecture and Application Link}
 \subsection{Architecture}
-The deployment design separates presentation and inference concerns:
+The deployment design is self-contained and optimized for simple cloud hosting:
 \begin{itemize}[leftmargin=1.5em]
-    \item \textbf{Frontend:} Streamlit app for single and batch predictions.
-    \item \textbf{Backend:} FastAPI service with endpoints for health, model info, single predict, and batch predict.
+    \item \textbf{Application layer:} Streamlit app for single and batch predictions.
+    \item \textbf{Inference engine:} Local in-app preprocessing and model scoring logic.
     \item \textbf{Model artefact:} Joblib bundle containing model, threshold, and metadata.
+    \item \textbf{Deployment mode:} Streamlit Cloud hosts the interface and inference in one service.
 \end{itemize}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.95\textwidth]{Tumushiime_deployment_architecture.png}
-    \caption{Deployment architecture for operational inference.}
+    \caption{Deployment architecture for standalone Streamlit operational inference.}
     \label{fig:arch}
 \end{figure}
 
@@ -220,18 +222,15 @@ The deployment design separates presentation and inference concerns:
 The application link included in this report is:
 \begin{itemize}[leftmargin=1.5em]
     \item \textbf{Streamlit application link:} \url{\publicappurl}
-    \item \textbf{Alternative local Streamlit URL:} \url{\streamliturl}
-    \item \textbf{FastAPI base URL:} \url{\apiurl}
-    \item \textbf{FastAPI interactive docs:} \url{\apiurl/docs}
 \end{itemize}
 
-\textit{Note: This Streamlit deployment is local to the running machine in the examination environment.}
+\textit{Note: The Streamlit URL above is publicly accessible via Streamlit Cloud and runs end-to-end predictions directly in the app.}
 
 \section{User Guidelines}
 \subsection{How to use the web application}
 \begin{enumerate}[leftmargin=1.7em]
     \item Open the Streamlit app URL: \url{\streamliturl}.
-    \item Confirm the sidebar health check reports that API is running.
+    \item Check sidebar status and confirm standalone local inference is active.
     \item Choose one workflow:
     \begin{itemize}[leftmargin=1.5em]
         \item \textbf{Single Prediction tab:} Enter product description and transaction details, then click Predict.
@@ -252,16 +251,16 @@ For best compatibility, include at least:
     \item Quantity
     \item Country
 \end{itemize}
-Optional fields accepted by defaults in UI/API:
+Optional fields accepted by defaults in UI:
 \begin{itemize}[leftmargin=1.5em]
     \item InvoiceMonth, InvoiceWeekday, InvoiceHour, CustomerID
 \end{itemize}
 
-\subsection{API usage (optional for technical users)}
+\subsection{Optional local run command (technical users)}
 \begin{itemize}[leftmargin=1.5em]
-    \item Single inference endpoint: \texttt{POST /predict}
-    \item Batch inference endpoint: \texttt{POST /batch-predict}
-    \item API docs and schema explorer: \url{\apiurl/docs}
+    \item Clone/download the project files to a local machine with Python.
+    \item Install dependencies: \texttt{pip install -r requirements.txt}
+    \item Launch app: \texttt{streamlit run streamlit\_app.py}
 \end{itemize}
 
 \section{Ethical, Privacy, and Reliability Considerations}
@@ -285,7 +284,7 @@ This project delivers a complete end-to-end retail return prediction solution: d
     \item Model: \texttt{Tumushiime best model.joblib}
     \item Predictions: \texttt{Tumushiime predictions.csv}
     \item NLP outputs: keyword CSV and comparison figures
-    \item Deployment scripts: \texttt{ui\_streamlit.py}, \texttt{api\_service.py}
+    \item Deployment script: \texttt{streamlit\_app.py}
     \item Streamlit dependencies: \texttt{requirements.txt}
 \end{itemize}
 
